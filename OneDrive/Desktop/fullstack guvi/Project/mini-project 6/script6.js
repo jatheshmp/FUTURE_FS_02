@@ -1,0 +1,91 @@
+class Guvi {
+  constructor(name, email, number, type) {
+    this.name = name;
+    this.email = email;
+    this.number = number;
+    this.type = type;
+  }
+}
+
+class Display {
+
+  add(guvi) {
+    let tableBody = document.getElementById("tableBody");
+
+    let uilist = `
+      <tr>
+        <td>${guvi.name}</td>
+        <td>${guvi.email}</td>
+        <td>${guvi.number}</td>
+        <td>${guvi.type}</td>
+      </tr>
+    `;
+
+    tableBody.innerHTML += uilist;
+  }
+
+  clear() {
+    let guviForm = document.getElementById("registerform");
+    guviForm.reset();
+  }
+
+  validate(guvi) {
+    if (
+      guvi.name.length < 2 ||
+      guvi.email.length < 5 ||
+      guvi.number.length < 10
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  show(type, displayMessage) {
+    let message = document.getElementById("message");
+
+    message.innerHTML = `
+      <div class="alert alert-${type}" role="alert">
+        ${displayMessage}
+      </div>
+    `;
+
+    setTimeout(() => {
+      message.innerHTML = "";
+    }, 3000);
+  }
+}
+
+let guviForm = document.getElementById("registerform");
+
+guviForm.addEventListener("submit", guviFormSubmit);
+
+function guviFormSubmit(e) {
+  e.preventDefault();
+
+  console.log("form is getting submitted");
+
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let number = document.getElementById("number").value;
+
+  let type = "";
+
+  if (document.getElementById("male").checked) {
+    type = document.getElementById("male").value;
+  } else if (document.getElementById("female").checked) {
+    type = document.getElementById("female").value;
+  }
+
+  let guvi = new Guvi(name, email, number, type);
+
+  let display = new Display();
+
+  if (display.validate(guvi)) {
+    display.add(guvi);
+    display.clear();
+    display.show("success", "Registration Successful");
+  } else {
+    display.show("danger", "Please enter valid details");
+  }
+}
